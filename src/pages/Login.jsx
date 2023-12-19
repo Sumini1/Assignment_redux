@@ -2,17 +2,16 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { fetchLoginUser } from "../reducer/loginSlice";
 import { useNavigate } from "react-router-dom";
-
+import { useState } from "react";
 
 const Login = () => {
-  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const Navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    const email = event.target.email.value;
-    const password = event.target.password.value;
 
     try {
       await dispatch(fetchLoginUser({ email, password }));
@@ -95,7 +94,7 @@ const Login = () => {
                     </div>
                     <div className="ml-3 text-sm">
                       <label
-                        for="remember"
+                        htmlFor="remember"
                         className="text-purple-800  dark:bg-purple-800"
                       >
                         Remember me
@@ -111,7 +110,7 @@ const Login = () => {
                 </div>
                 <button
                   type="submit"
-                  onClick={handleSubmit}
+                  onClick={handleLogin}
                   className="w-full text-amber-500 border border-amber-500  focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center   "
                 >
                   Sign in
@@ -136,24 +135,24 @@ const Login = () => {
 export default Login;
 
 // const dispatch = useDispatch();
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+// const [email, setEmail] = useState("");
+// const [password, setPassword] = useState("");
 
-  // // cek status
-  //   const status = useSelector((state) => state.login.status);
-  //   const error = useSelector((state) => state.login.error);
-  //   const response = useSelector((state) => state.login.response);
+// // cek status
+//   const status = useSelector((state) => state.login.status);
+//   const error = useSelector((state) => state.login.error);
+//   const response = useSelector((state) => state.login.response);
 
-  // console.log("email", email);
-  // console.log("password", password);
+// console.log("email", email);
+// console.log("password", password);
 
-  // // cek submit
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log("Pass dan Email Akhir", password, email);
-  //   dispatch(fetchLoginUser({ email, password }));
-  // };
-  // // sek hasil dispatch
-  // console.log("status", status);
-  // console.log("error", error);
-  // console.log("response", response);
+// // cek submit
+// const handleSubmit = (e) => {
+//   e.preventDefault();
+//   console.log("Pass dan Email Akhir", password, email);
+//   dispatch(fetchLoginUser({ email, password }));
+// };
+// // sek hasil dispatch
+// console.log("status", status);
+// console.log("error", error);
+// console.log("response", response);

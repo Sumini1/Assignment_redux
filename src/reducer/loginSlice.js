@@ -1,39 +1,33 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { useNavigate } from "react-router-dom";
+
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Swal from "sweetalert2";
 
-// representasi i ni buat apa
+// Simpan token ke dalam variabel global jika perlu
+let authToken = null;
+
+// Mengatur token setelah login berhasil
+const setAuthToken = (token) => {
+  authToken = token;
+  localStorage.setItem("token", token);
+};
+
+// Action untuk melakukan login dan mendapatkan token
 export const fetchLoginUser = createAsyncThunk(
-  "login/loginUser",
-  async (userData) => {
-    //try catch untun check func bener/salah
-    try {
-      const response = await fetch("https://reqres.in/api/login", {
-        // methode basa on API
-        method: "POST",
-        // headers => content apa? application/json
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // isi body, sesuai API, biasanya JSON string
-        body: JSON.stringify(userData),
-      });
-      
-      // cek response
-      if (!response.ok) {
-        throw new Error("login gagal");
-      }
-      // response sukses?
-      console.log("response oke / berhasil ");
-
-      // nunggu responnya
-      const data = await response.json();
+  "login/fetchLoginUser",
+  async (credentials) => {
+    const response = await fetch("https://reqres.in/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      setAuthToken(data.token); //Untuk Simpan token setelah login berhasil
       return data;
-
-      // response error
-    } catch (error) {
-      console.log("error di try catch", error);
-      throw error;
+    } else {
+      throw new Error(data.error); //Untuk Handle error jika login gagal
     }
   }
 );
@@ -41,35 +35,46 @@ export const fetchLoginUser = createAsyncThunk(
 const loginSlice = createSlice({
   name: "login",
   initialState: {
-    response: null,
+    user: null,
     status: "idle",
     error: null,
   },
-  reducers: {},
+  reducers: {
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+    logoutUser: (state) => {
+      state.user = null;
+      authToken = null; //Untuk Reset token setelah logout
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchLoginUser.pending, (state) => {
         state.status = "loading";
       })
-
       .addCase(fetchLoginUser.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.response = action.payload;
+        state.status = "succes";
+        state.user = action.payload;
         Swal.fire({
-          icon: "succeeded",
-          title: "Login Berhasil",
-        });
+          icon: "success",
+          title: "Login Berhasil!",
+        })
       })
-
       .addCase(fetchLoginUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
         Swal.fire({
           icon: "error",
-          title: "Periksa kembali email anda",
+          title: "Oops...",
           text: action.error.message,
-        });
+        })
       });
   },
 });
+
+export const { setUser, logoutUser } = loginSlice.actions;
+export const selectUser = (state) => state.login.user;
+
 export default loginSlice.reducer;
+
