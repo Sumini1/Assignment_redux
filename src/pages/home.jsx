@@ -22,28 +22,26 @@ const Home = () => {
   };
 
   return (
-   
-      <div className="bg-amber-200">
-        <button
-          onClick={logoutUser}
-          className="py-2 px-5 bg-purple-900 text-white font-bold rounded-xl hover:scale-105 duration-300 "
-        >
-          Logout
-        </button>
+    <div className="bg-amber-200   mb-0 p-0 w-[100%] h-[100vw] z-50 backdrop-blur">
+      <button
+        onClick={logoutUser}
+        className="py-2 px-5 bg-purple-900 text-white font-bold rounded-xl hover:scale-105 duration-300 "
+      >
+        Logout
+      </button>
 
-        <h1 className="text-center text-purple-900 font-bold from-neutral-300">
-          List Users
-        </h1>
-        <div className="grid gap-3 grid-cols-3  p-10 pl-64 ">
-          {list.map((item, index) => (
-            <div key={index}>
-              <img className="rounded-s-full" src={item.avatar} alt="" />
-              <p className="text-purple-700">{item.first_name}</p>
-            </div>
-          ))}
-        </div>
+      <h1 className="text-center text-purple-900 font-bold from-neutral-300">
+        List Users
+      </h1>
+      <div className="grid gap-3 grid-cols-3  p-10 pl-64 ">
+        {list.map((item, index) => (
+          <div key={index}>
+            <img className="rounded-s-full" src={item.avatar} alt="" />
+            <p className="text-purple-700">{item.first_name}</p>
+          </div>
+        ))}
       </div>
-  
+    </div>
   );
 };
 export default Home;
